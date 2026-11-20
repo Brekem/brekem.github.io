@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Predicador</title>
+<meta name="description" content="El Predicador: la Palabra que alumbra.">
+<meta name="theme-color" content="#05060d">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2305060d'/><path d='M32 10v44M20 24h24' stroke='%23e8c372' stroke-width='6' stroke-linecap='round'/></svg>">
+<style>
+  :root { --oro: #e8c372; --oro-claro: #fff1c9; --texto: #ece6d6; --tenue: #a39d8f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #04050c; color: var(--texto); font-family: Georgia, "Times New Roman", serif; }
+  body { display: grid; place-items: center; overflow: hidden; padding: 16px; }
+  .cielo { position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% -5%, rgba(255,214,130,.28), transparent 70%),
+      radial-gradient(circle at 15% 70%, rgba(255,120,40,.25), transparent 40%),
+      radial-gradient(circle at 85% 25%, rgba(60,110,255,.25), transparent 40%),
+      radial-gradient(circle at 60% 95%, rgba(160,80,255,.22), transparent 40%); }
+  .estrellas { position: fixed; inset: 0; z-index: 0; background-image:
+      radial-gradient(1px 1px at 10% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 70% 30%, #fff, transparent), radial-gradient(1px 1px at 85% 75%, #fff, transparent),
+      radial-gradient(1px 1px at 50% 50%, #fff, transparent), radial-gradient(1.5px 1.5px at 20% 45%, #ffd9a0, transparent),
+      radial-gradient(1px 1px at 65% 85%, #bcd0ff, transparent), radial-gradient(1px 1px at 90% 10%, #fff, transparent);
+    animation: titila 4s ease-in-out infinite alternate; }
+  @keyframes titila { to { opacity: .45; } }
+  main { position: relative; z-index: 1; text-align: center; max-width: 520px; }
+  .cruz { width: 54px; height: 66px; margin: 0 auto 18px; position: relative; filter: drop-shadow(0 0 14px rgba(255,215,140,.8)); }
+  .cruz::before, .cruz::after { content: ""; position: absolute; background: linear-gradient(180deg, var(--oro-claro), var(--oro) 60%, #b8862f); border-radius: 3px; }
+  .cruz::before { left: 50%; top: 0; bottom: 0; width: 9px; transform: translateX(-50%); }
+  .cruz::after { top: 17px; left: 6px; right: 6px; height: 9px; }
+  h1 { margin: 0; font-size: 44px; font-weight: 600; color: var(--oro-claro); text-shadow: 0 0 24px rgba(232,195,114,.5); }
+  p { color: var(--tenue); font-size: 19px; line-height: 1.5; font-style: italic; }
+  a.boton { display: inline-block; margin-top: 10px; padding: 14px 26px; border-radius: 14px; text-decoration: none; font-family: system-ui, sans-serif;
+    font-weight: 600; color: #1b1405; background: linear-gradient(180deg, #ffe7a6, var(--oro) 50%, #c9963f); box-shadow: 0 0 26px rgba(232,195,114,.45); }
+  .chispa { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--oro); box-shadow: 0 0 12px var(--oro);
+    animation: late 1.2s infinite; margin-right: 8px; vertical-align: middle; }
+  @keyframes late { 50% { transform: scale(1.4); } }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="cielo"></div><div class="estrellas"></div>
+<main>
+  <div class="cruz" aria-hidden="true"></div>
+  <h1>El Predicador</h1>
+  <p id="abriendo"><span class="chispa"></span>Abriendo la Palabra…</p>
+  <div id="descansando" hidden>
+    <p>El Predicador está descansando en este momento.<br>Vuelve a intentar en un rato.</p>
+    <p style="font-size:16px">«Esperad a Jehová; esforzaos, y aliéntese vuestro corazón.» — Salmos 27:14</p>
+    <a class="boton" href="">Intentar de nuevo</a>
+  </div>
+</main>
+<script>
+  // La dirección real del Predicador (Tailscale Funnel en la PC de Brekem).
+  const DESTINO = "https://predicador.tailef097f.ts.net/";
+  const control = new AbortController();
+  const tiempo = setTimeout(() => control.abort(), 9000);
+  // Si el Predicador está prendido responde; si la PC está apagada la conexión falla.
+  fetch(DESTINO + "api/palabra-del-dia", { mode: "cors", cache: "no-store", signal: control.signal })
+    .then(r => {
+      clearTimeout(tiempo);
+      if (r.ok) location.replace(DESTINO); else throw new Error(r.status);
+    })
+    .catch(() => {
+      clearTimeout(tiempo);
+      document.getElementById("abriendo").hidden = true;
+      document.getElementById("descansando").hidden = false;
+    });
+</script>
+</body>
+</html>
