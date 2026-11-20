@@ -47,14 +47,16 @@
   <h1>El Predicador</h1>
   <p id="abriendo"><span class="chispa"></span>Abriendo la Palabra…</p>
   <div id="descansando" hidden>
-    <p>El Predicador está descansando en este momento.<br>Vuelve a intentar en un rato.</p>
+    <p>Parece que el Predicador está descansando en este momento.<br>Vuelve a intentar en un rato.</p>
     <p style="font-size:16px">«Esperad a Jehová; esforzaos, y aliéntese vuestro corazón.» — Salmos 27:14</p>
     <a class="boton" href="">Intentar de nuevo</a>
+    <p style="font-size:15px; margin-top:22px"><a id="directo" style="color:var(--oro)">Entrar de todos modos →</a></p>
   </div>
 </main>
 <script>
   // La dirección real del Predicador (Tailscale Funnel en la PC de Brekem).
   const DESTINO = "https://predicador.tailef097f.ts.net/";
+  document.getElementById("directo").href = DESTINO;
   const control = new AbortController();
   const tiempo = setTimeout(() => control.abort(), 9000);
   // Si el Predicador está prendido responde; si la PC está apagada la conexión falla.
